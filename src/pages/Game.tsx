@@ -119,9 +119,9 @@ export function Game() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-gray-50 flex flex-col overflow-hidden" style={{ height: '100vh', touchAction: 'pan-y pinch-zoom' }}>
       {/* Header */}
-      <div className="bg-white shadow-sm border-b border-gray-200 p-4">
+      <div className="bg-white shadow-sm border-b border-gray-200 p-4 flex-shrink-0">
         <div className="flex items-center justify-between mb-2">
           <h1 className="text-xl font-bold text-gray-800">
             Level {level.id}: {level.name}
@@ -135,14 +135,16 @@ export function Game() {
         <div className="flex items-center justify-between">
           <button
             onClick={() => setShowHowToPlay(true)}
+            onTouchEnd={(e) => { e.preventDefault(); setShowHowToPlay(true); }}
             className="bg-gray-100 hover:bg-gray-200 active:bg-gray-300 text-gray-700 px-4 py-3 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 min-h-[44px] touch-target"
-            style={{ WebkitTapHighlightColor: 'rgba(0,0,0,0.1)' }}
+            style={{ WebkitTapHighlightColor: 'rgba(0,0,0,0.1)', touchAction: 'manipulation' }}
           >
             📖 Help
           </button>
           
           <button
             onClick={useHint}
+            onTouchEnd={(e) => { if (gameState.hintsLeft > 0) { e.preventDefault(); useHint(); } }}
             disabled={gameState.hintsLeft <= 0}
             className={`
               px-4 py-3 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 min-h-[44px] touch-target
@@ -151,7 +153,7 @@ export function Game() {
                 : 'bg-gray-100 text-gray-400 cursor-not-allowed'
               }
             `}
-            style={{ WebkitTapHighlightColor: 'rgba(0,0,0,0.1)' }}
+            style={{ WebkitTapHighlightColor: 'rgba(0,0,0,0.1)', touchAction: 'manipulation' }}
           >
             💡 Hints: {gameState.hintsLeft}
           </button>
@@ -203,7 +205,9 @@ export function Game() {
               {level.id < 5 ? (
                 <button
                   onClick={handleNextLevel}
-                  className="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+                  onTouchEnd={(e) => { e.preventDefault(); handleNextLevel(); }}
+                  className="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors min-h-[48px]"
+                  style={{ touchAction: 'manipulation' }}
                 >
                   Next Level
                 </button>
@@ -219,7 +223,9 @@ export function Game() {
             <div className="flex gap-3">
               <button
                 onClick={() => navigate('/stats')}
-                className="flex-1 bg-primary-100 hover:bg-primary-200 text-primary-800 font-semibold py-3 px-6 rounded-lg transition-colors"
+                onTouchEnd={(e) => { e.preventDefault(); navigate('/stats'); }}
+                className="flex-1 bg-primary-100 hover:bg-primary-200 text-primary-800 font-semibold py-3 px-6 rounded-lg transition-colors min-h-[48px]"
+                style={{ touchAction: 'manipulation' }}
               >
                 View Stats
               </button>
@@ -234,7 +240,18 @@ export function Game() {
                   };
                   shareToTwitter(shareData);
                 }}
-                className="flex-1 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2"
+                onTouchEnd={(e) => {
+                  e.preventDefault();
+                  const shareData = {
+                    level,
+                    timeLeft: levelCompleteStats.timeLeft,
+                    totalLevelsCompleted: getTotalCompletedLevels(),
+                    bestTime: getBestTime(level.id)
+                  };
+                  shareToTwitter(shareData);
+                }}
+                className="flex-1 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2 min-h-[48px]"
+                style={{ touchAction: 'manipulation' }}
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
@@ -244,7 +261,9 @@ export function Game() {
               
               <button
                 onClick={() => navigate('/')}
-                className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 px-6 rounded-lg transition-colors"
+                onTouchEnd={(e) => { e.preventDefault(); navigate('/'); }}
+                className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 px-6 rounded-lg transition-colors min-h-[48px]"
+                style={{ touchAction: 'manipulation' }}
               >
                 Main Menu
               </button>
@@ -274,21 +293,27 @@ export function Game() {
             <div className="space-y-3">
               <button
                 onClick={handleRetry}
-                className="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+                onTouchEnd={(e) => { e.preventDefault(); handleRetry(); }}
+                className="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors min-h-[48px]"
+                style={{ touchAction: 'manipulation' }}
               >
                 Try Again
               </button>
               
               <button
                 onClick={() => setShowMissedWordsView(true)}
-                className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 px-6 rounded-lg transition-colors"
+                onTouchEnd={(e) => { e.preventDefault(); setShowMissedWordsView(true); }}
+                className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 px-6 rounded-lg transition-colors min-h-[48px]"
+                style={{ touchAction: 'manipulation' }}
               >
                 View Missed Words
               </button>
               
               <button
                 onClick={() => navigate('/')}
-                className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 px-6 rounded-lg transition-colors"
+                onTouchEnd={(e) => { e.preventDefault(); navigate('/'); }}
+                className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 px-6 rounded-lg transition-colors min-h-[48px]"
+                style={{ touchAction: 'manipulation' }}
               >
                 Main Menu
               </button>
@@ -300,7 +325,9 @@ export function Game() {
             <div className="flex items-center justify-between mb-4">
               <button
                 onClick={() => setShowMissedWordsView(false)}
-                className="flex items-center text-gray-600 hover:text-gray-800 transition-colors"
+                onTouchEnd={(e) => { e.preventDefault(); setShowMissedWordsView(false); }}
+                className="flex items-center text-gray-600 hover:text-gray-800 transition-colors min-h-[44px]"
+                style={{ touchAction: 'manipulation' }}
               >
                 <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -357,8 +384,9 @@ export function Game() {
       {/* Quit FAB Button */}
       <button
         onClick={() => setShowQuitConfirmation(true)}
+        onTouchEnd={(e) => { e.preventDefault(); setShowQuitConfirmation(true); }}
         className="fixed bottom-4 right-4 w-14 h-14 bg-primary-600 hover:bg-primary-700 active:bg-primary-800 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center z-40 touch-target"
-        style={{ WebkitTapHighlightColor: 'rgba(0,0,0,0.1)' }}
+        style={{ WebkitTapHighlightColor: 'rgba(0,0,0,0.1)', touchAction: 'manipulation' }}
         aria-label="Quit game"
       >
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -384,13 +412,17 @@ export function Game() {
           <div className="flex gap-3">
             <button
               onClick={handleQuitCancel}
-              className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 px-6 rounded-lg transition-colors"
+              onTouchEnd={(e) => { e.preventDefault(); handleQuitCancel(); }}
+              className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 px-6 rounded-lg transition-colors min-h-[48px]"
+              style={{ touchAction: 'manipulation' }}
             >
               No
             </button>
             <button
               onClick={handleQuit}
-              className="flex-1 bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+              onTouchEnd={(e) => { e.preventDefault(); handleQuit(); }}
+              className="flex-1 bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors min-h-[48px]"
+              style={{ touchAction: 'manipulation' }}
             >
               Quit
             </button>

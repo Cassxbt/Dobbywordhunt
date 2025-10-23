@@ -11,17 +11,18 @@ export function calculateGridSize(
   viewportWidth: number,
   viewportHeight: number
 ): GridDimensions {
-  // Reserve space for UI elements - mobile optimized
-  const headerHeight = 100; // Increased for mobile touch targets
-  const wordListHeight = Math.min(100, viewportHeight * 0.2); // Reduced for mobile
-  const padding = 16; // Reduced padding for mobile
+  // Mobile Safari UI bars take ~140px (top + bottom)
+  const headerHeight = 120; // Header + timer + buttons
+  const wordListHeight = Math.min(80, viewportHeight * 0.15); // Chips at bottom
+  const padding = 24; // Minimal padding
+  const safariBarsHeight = 100; // Account for Safari UI bars
 
-  const availableHeight = viewportHeight - headerHeight - wordListHeight - padding;
-  const availableWidth = viewportWidth - padding;
+  const availableHeight = viewportHeight - headerHeight - wordListHeight - padding - safariBarsHeight;
+  const availableWidth = viewportWidth - (padding * 2);
 
-  // Mobile-optimized cell sizes (iOS minimum touch target is 44px)
-  const minCellSize = 44; // Increased for proper touch targets
-  const maxCellSize = 50; // Slightly increased max
+  // Smaller cell sizes for mobile to fit more grid
+  const minCellSize = 36; // Smaller minimum
+  const maxCellSize = 42; // Smaller maximum
 
   // Calculate optimal grid size based on level requirements
   const longestWord = Math.max(...level.words.map(w => w.length));

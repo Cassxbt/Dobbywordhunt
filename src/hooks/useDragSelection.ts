@@ -21,18 +21,36 @@ export function useDragSelection({ gridSize, onSelectionComplete }: UseDragSelec
     if (!containerRef.current) return null;
 
     const rect = containerRef.current.getBoundingClientRect();
-    const clientX = 'touches' in event ? event.touches[0].clientX : event.clientX;
-    const clientY = 'touches' in event ? event.touches[0].clientY : event.clientY;
+    
+    // Handle different event types properly for touch
+    let clientX: number;
+    let clientY: number;
+    
+    if ('touches' in event && event.touches.length > 0) {
+      clientX = event.touches[0].clientX;
+      clientY = event.touches[0].clientY;
+    } else if ('changedTouches' in event && event.changedTouches.length > 0) {
+      // For touchend events
+      clientX = event.changedTouches[0].clientX;
+      clientY = event.changedTouches[0].clientY;
+    } else if ('clientX' in event) {
+      clientX = event.clientX;
+      clientY = event.clientY;
+    } else {
+      return null;
+    }
 
     const x = clientX - rect.left;
     const y = clientY - rect.top;
 
     const cellSize = Math.min(rect.width / gridSize, rect.height / gridSize);
-    const col = Math.floor(x / cellSize);
-    const row = Math.floor(y / cellSize);
+    
+    // Use rounding instead of floor for better center detection
+    const col = Math.round((x - cellSize / 2) / cellSize);
+    const row = Math.round((y - cellSize / 2) / cellSize);
 
-    // Add tolerance for edge detection (allow 10% overflow)
-    const tolerance = 0.1;
+    // Add tolerance for edge detection
+    const tolerance = 0.2;
     if (row >= -tolerance && row < gridSize + tolerance && 
         col >= -tolerance && col < gridSize + tolerance) {
       // Clamp to valid range
