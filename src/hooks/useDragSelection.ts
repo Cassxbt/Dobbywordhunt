@@ -76,7 +76,12 @@ export function useDragSelection({ gridSize, onSelectionComplete }: UseDragSelec
   }, [gridSize]);
 
   const handleStart = useCallback((event: React.TouchEvent | React.MouseEvent) => {
-    event.preventDefault();
+    // Prevent default behavior for touch events
+    if ('touches' in event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    
     const cell = getCellFromEvent(event);
     
     if (cell) {
@@ -92,7 +97,11 @@ export function useDragSelection({ gridSize, onSelectionComplete }: UseDragSelec
   const handleMove = useCallback((event: React.TouchEvent | React.MouseEvent) => {
     if (!selection.isSelecting || !selection.startCell) return;
     
-    event.preventDefault();
+    // Prevent default behavior for touch events
+    if ('touches' in event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
     
     // Cancel previous RAF if it exists
     if (rafIdRef.current) {
@@ -117,7 +126,11 @@ export function useDragSelection({ gridSize, onSelectionComplete }: UseDragSelec
   const handleEnd = useCallback((event: React.TouchEvent | React.MouseEvent) => {
     if (!selection.isSelecting || !selection.startCell) return;
     
-    event.preventDefault();
+    // Prevent default behavior for touch events
+    if ('touches' in event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
     
     // Cancel any pending RAF
     if (rafIdRef.current) {

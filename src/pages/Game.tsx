@@ -135,7 +135,8 @@ export function Game() {
         <div className="flex items-center justify-between">
           <button
             onClick={() => setShowHowToPlay(true)}
-            className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
+            className="bg-gray-100 hover:bg-gray-200 active:bg-gray-300 text-gray-700 px-4 py-3 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 min-h-[44px] touch-target"
+            style={{ WebkitTapHighlightColor: 'rgba(0,0,0,0.1)' }}
           >
             📖 Help
           </button>
@@ -144,12 +145,13 @@ export function Game() {
             onClick={useHint}
             disabled={gameState.hintsLeft <= 0}
             className={`
-              px-3 py-1 rounded text-sm font-medium transition-colors
+              px-4 py-3 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 min-h-[44px] touch-target
               ${gameState.hintsLeft > 0 
-                ? 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200' 
+                ? 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200 active:bg-yellow-300' 
                 : 'bg-gray-100 text-gray-400 cursor-not-allowed'
               }
             `}
+            style={{ WebkitTapHighlightColor: 'rgba(0,0,0,0.1)' }}
           >
             💡 Hints: {gameState.hintsLeft}
           </button>
@@ -355,7 +357,8 @@ export function Game() {
       {/* Quit FAB Button */}
       <button
         onClick={() => setShowQuitConfirmation(true)}
-        className="fixed bottom-4 right-4 w-12 h-12 bg-primary-600 hover:bg-primary-700 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center z-40"
+        className="fixed bottom-4 right-4 w-14 h-14 bg-primary-600 hover:bg-primary-700 active:bg-primary-800 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center z-40 touch-target"
+        style={{ WebkitTapHighlightColor: 'rgba(0,0,0,0.1)' }}
         aria-label="Quit game"
       >
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
