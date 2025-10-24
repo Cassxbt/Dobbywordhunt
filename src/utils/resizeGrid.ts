@@ -17,6 +17,21 @@ export function calculateGridSize(
   
   // Detect device type for aggressive mobile optimization
   const isMobile = safeViewportWidth < 480; // Small phones
+  
+  // MOBILE: Use fixed grid size from getLevelById(), skip calculations
+  if (isMobile) {
+    const gridSize = level.gridSize.max; // This is 8 or 10 from getLevelById()
+    const gridWidth = safeViewportWidth * 0.85; // 85vw (matches Tailwind)
+    const cellSize = gridWidth / gridSize;
+    
+    return {
+      rows: gridSize,
+      cols: gridSize,
+      cellSize: Math.max(cellSize, 32) // Minimum 32px per cell
+    };
+  }
+  
+  // DESKTOP: Keep existing calculation logic below
   const isTablet = safeViewportWidth >= 480 && safeViewportWidth < 768; // Tablets
   
   // AGGRESSIVE viewport calculations for mobile

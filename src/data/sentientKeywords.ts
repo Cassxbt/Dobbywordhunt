@@ -17,7 +17,7 @@ export const WORD_POOLS = {
     // Existing (keep ≤10 letter words)
     "knowledge", "artificial", "evaluation", "recursive", "encryption", "governance", "Omlization", "fingerprint", "community", "algorithms", "checkpoint", "foundation",
     // NEW mobile-friendly words (≤10 letters)
-    "backprop", "dropout", "tensor", "gradient", "kernel", "pipeline", "feature", "embedding", "softmax", "neuron", "weights", "bias", "pooling", "sigmoid", "relu", "adam"
+    "backprop", "dropout", "tensor", "gradient", "kernel", "pipeline", "feature", "embedding", "softmax", "neuron", "weight", "bias", "pooling", "sigmoid", "relu", "adam"
   ],
   
   level5: [
