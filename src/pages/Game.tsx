@@ -71,6 +71,11 @@ export function Game() {
     }
   });
 
+  // Update grid dimensions when level changes
+  useEffect(() => {
+    setGridDimensions(calculateGridSize(level, window.innerWidth, window.innerHeight));
+  }, [level]);
+
   // Update grid dimensions on window resize
   useEffect(() => {
     const handleResize = () => {
