@@ -33,7 +33,7 @@ export function Grid({ grid, cellSize, hintHighlight, onSelectionComplete }: Gri
   });
 
   return (
-    <div className="relative w-full h-full flex items-center justify-center p-2 sm:p-6 overflow-hidden">
+    <div className="relative w-full h-full flex items-center justify-center p-2 sm:p-6 overflow-hidden" style={{ maxWidth: '100vw', position: 'relative' }}>
       <div
         ref={containerRef}
         className="relative"

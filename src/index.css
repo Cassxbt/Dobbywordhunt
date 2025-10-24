@@ -101,6 +101,12 @@ body {
     overflow-x: hidden;
   }
   
+  /* Safari viewport fix - use -webkit-fill-available */
+  .game-container {
+    height: 100vh;
+    height: -webkit-fill-available;
+  }
+  
   /* Ensure touch targets are large enough */
   button, input, select, textarea {
     min-height: 44px;

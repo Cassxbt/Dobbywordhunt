@@ -11,18 +11,25 @@ export function calculateGridSize(
   viewportWidth: number,
   viewportHeight: number
 ): GridDimensions {
+  // Use visualViewport API for Safari (excludes address bar)
+  const safeViewportHeight = window.visualViewport?.height || viewportHeight;
+  const safeViewportWidth = window.visualViewport?.width || viewportWidth;
+  
   // Mobile Safari UI bars take ~140px (top + bottom)
   const headerHeight = 120; // Header + timer + buttons
-  const wordListHeight = Math.min(80, viewportHeight * 0.15); // Chips at bottom
+  const wordListHeight = Math.min(80, safeViewportHeight * 0.15); // Chips at bottom
   const padding = 24; // Minimal padding
   const safariBarsHeight = 100; // Account for Safari UI bars
 
-  const availableHeight = viewportHeight - headerHeight - wordListHeight - padding - safariBarsHeight;
-  const availableWidth = viewportWidth - (padding * 2);
+  const availableHeight = safeViewportHeight - headerHeight - wordListHeight - padding - safariBarsHeight;
+  const availableWidth = safeViewportWidth - (padding * 2);
 
+  // Detect mobile for smaller cell sizes
+  const isMobile = safeViewportWidth < 768;
+  
   // Smaller cell sizes for mobile to fit more grid
-  const minCellSize = 36; // Smaller minimum
-  const maxCellSize = 42; // Smaller maximum
+  const minCellSize = isMobile ? 32 : 36; // Smaller minimum for mobile
+  const maxCellSize = isMobile ? 38 : 42; // Smaller maximum for mobile
 
   // Calculate optimal grid size based on level requirements
   const longestWord = Math.max(...level.words.map(w => w.length));
@@ -62,7 +69,10 @@ export function getResponsiveGridStyle(dimensions: GridDimensions): React.CSSPro
     // Mobile-specific fixes
     overflow: 'hidden',
     touchAction: 'none', // Prevent scrolling during drag
-    WebkitOverflowScrolling: 'touch'
+    WebkitOverflowScrolling: 'touch',
+    // Ensure grid stays within viewport
+    position: 'relative',
+    boxSizing: 'border-box'
   };
 }
 

@@ -119,7 +119,7 @@ export function Game() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col overflow-hidden" style={{ height: '100vh', touchAction: 'pan-y pinch-zoom' }}>
+    <div className="game-container min-h-screen bg-gray-50 flex flex-col overflow-hidden" style={{ touchAction: 'pan-y pinch-zoom' }}>
       {/* Header */}
       <div className="bg-white shadow-sm border-b border-gray-200 p-4 flex-shrink-0">
         <div className="flex items-center justify-between mb-2">
