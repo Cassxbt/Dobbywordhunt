@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Grid } from '../components/Grid';
 import { FoundWordsChips } from '../components/FoundWordsChips';
@@ -27,7 +27,7 @@ export function Game() {
   const [showHowToPlay, setShowHowToPlay] = useState(false);
   const [levelCompleteStats, setLevelCompleteStats] = useState<{ timeLeft: number; wordsFound: number } | null>(null);
 
-  const level = getLevelById(parseInt(levelId || '1'));
+  const level = useMemo(() => getLevelById(parseInt(levelId || '1')), [levelId]);
   
   if (!level) {
     navigate('/');
