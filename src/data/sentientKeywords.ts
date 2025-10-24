@@ -3,10 +3,29 @@ import { Level } from '../types/game';
 // Word pools for each level - game randomly selects subset for each play
 export const WORD_POOLS = {
   level1: ["agent", "node", "loyal", "data", "proof", "oracle", "query", "model", "grid", "roma", "meta", "deep", "epoch", "dobby", "token"],
+  
   level2: ["openness", "verifier", "latency", "license", "control", "monetize", "finetune", "economy", "executor", "revenue", "context", "privacy", "reward", "verify", "secure", "daemon"],
-  level3: ["ownership", "autonomy", "inference", "compute", "validator", "blockchain", "benchmark", "alignment", "Gradient", "sentient", "protocol", "directory", "research", "network", "zkproof"],
-  level4: ["knowledge", "artificial", "proprietary", "evaluation", "recursive", "encryption", "governance", "Omlization", "fingerprint", "community", "algorithms", "checkpoint", "foundation", "deployment", "tokenomics"],
-  level5: ["Democratize", "Architecture", "Information", "decentralize", "Camouflage", "fundamental", "performance", "infrastructure", "distribute", "homomorphic", "optimization", "immutable", "middleware"]
+  
+  level3: [
+    // Existing (keep ≤10 letter words)
+    "autonomy", "inference", "compute", "validator", "blockchain", "benchmark", "alignment", "Gradient", "sentient", "protocol", "directory", "research", "network", "zkproof",
+    // NEW mobile-friendly words (≤10 letters)
+    "layer", "shard", "wallet", "subnet", "rollup", "staking", "slashing", "merkle", "nonce", "gas", "proof", "consensus", "fork", "finality"
+  ],
+  
+  level4: [
+    // Existing (keep ≤10 letter words)
+    "knowledge", "artificial", "evaluation", "recursive", "encryption", "governance", "Omlization", "fingerprint", "community", "algorithms", "checkpoint", "foundation",
+    // NEW mobile-friendly words (≤10 letters)
+    "backprop", "dropout", "tensor", "gradient", "kernel", "pipeline", "feature", "embedding", "softmax", "neuron", "weights", "bias", "pooling", "sigmoid", "relu", "adam"
+  ],
+  
+  level5: [
+    // Existing (keep ≤10 letter words)
+    "Camouflage", "fundamental", "distribute", "immutable", "middleware",
+    // NEW mobile-friendly words (≤10 letters)
+    "consensus", "byzantine", "sybil", "fork", "finality", "sharding", "plasma", "zksync", "rollups", "bridges", "indexer", "validator", "sequencer", "arbitrum", "polygon"
+  ]
 };
 
 export const LEVELS: Level[] = [
@@ -89,24 +108,39 @@ export const getLevelById = (id: number): Level | undefined => {
   const level = LEVELS.find(level => level.id === id);
   if (!level) return undefined;
   
-  // Detect mobile for word count adjustment
+  // Mobile detection
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 480;
   
-  // Reduce word count on mobile (8x8 grid can fit fewer words comfortably)
+  const poolKey = `level${id}` as keyof typeof WORD_POOLS;
+  let pool = WORD_POOLS[poolKey];
+  
   let adjustedWordCount = level.wordCount || 10;
+  let adjustedGridSize = level.gridSize;
+  
   if (isMobile) {
-    // Reduce by ~20% for mobile
+    // 1. Filter words to max 10 letters
+    const MAX_MOBILE_WORD_LENGTH = 10;
+    pool = pool.filter(word => word.length <= MAX_MOBILE_WORD_LENGTH);
+    
+    // 2. Reduce word count by 20%
     adjustedWordCount = Math.max(6, Math.floor(level.wordCount! * 0.8));
+    
+    // 3. Force grid sizes based on level
+    if (id <= 2) {
+      // Levels 1-2: 8x8 (optimal for small screens)
+      adjustedGridSize = { min: 8, max: 8 };
+    } else {
+      // Levels 3-5: 10x10 (manageable challenge)
+      adjustedGridSize = { min: 10, max: 10 };
+    }
   }
   
-  // Generate random words for this level
-  const poolKey = `level${id}` as keyof typeof WORD_POOLS;
-  const pool = WORD_POOLS[poolKey];
-  
+  // Select random words from (possibly filtered) pool
   if (pool && level.wordCount) {
     return {
       ...level,
       wordCount: adjustedWordCount,
+      gridSize: adjustedGridSize,
       words: selectRandomWords(pool, adjustedWordCount)
     };
   }
