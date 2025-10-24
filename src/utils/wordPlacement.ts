@@ -14,17 +14,28 @@ export interface PlacementResult {
   placedWords: Word[];
 }
 
-export function placeWords(words: string[], gridSize: number): PlacementResult {
+export function placeWords(words: string[], gridSize: number, maxGridSize?: number): PlacementResult {
+  let currentWords = [...words];
   let currentGridSize = gridSize;
   let attempts = 0;
   const maxAttempts = 100;
 
   while (attempts < maxAttempts) {
     try {
-      const result = attemptPlacement(words, currentGridSize);
+      const result = attemptPlacement(currentWords, currentGridSize);
       return result;
     } catch (error) {
       attempts++;
+      
+      // If we hit max grid size, reduce word count instead of increasing grid
+      if (maxGridSize && currentGridSize >= maxGridSize) {
+        if (currentWords.length > 5) {
+          currentWords = currentWords.slice(0, -1); // Remove last word
+          currentGridSize = gridSize; // Reset to original size
+          continue;
+        }
+      }
+      
       currentGridSize++;
       if (attempts >= maxAttempts) {
         throw new Error('Failed to place words after maximum attempts');

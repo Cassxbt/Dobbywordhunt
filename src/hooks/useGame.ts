@@ -14,7 +14,7 @@ export interface UseGameProps {
 export function useGame({ level, onLevelComplete, onLevelFailed }: UseGameProps) {
   const [gameState, setGameState] = useState<GameState>(() => {
     const gridSize = calculateGridSize(level, window.innerWidth, window.innerHeight);
-    const placement = placeWords(level.words, gridSize.rows);
+    const placement = placeWords(level.words, gridSize.rows, gridSize.rows); // Pass maxGridSize
     
     return {
       level,
@@ -36,7 +36,7 @@ export function useGame({ level, onLevelComplete, onLevelFailed }: UseGameProps)
   // Reset game state when level changes
   useEffect(() => {
     const gridSize = calculateGridSize(level, window.innerWidth, window.innerHeight);
-    const placement = placeWords(level.words, gridSize.rows);
+    const placement = placeWords(level.words, gridSize.rows, gridSize.rows); // Pass maxGridSize
     
     setGameState({
       level,
