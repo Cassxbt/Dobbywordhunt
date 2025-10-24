@@ -11,22 +11,20 @@ export function calculateGridSize(
   viewportWidth: number,
   viewportHeight: number
 ): GridDimensions {
-  // Use visualViewport API for Safari (excludes address bar)
+  // CRITICAL: Use window.innerWidth for mobile detection (matches getLevelById())
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 480;
+  
+  // Use visualViewport for HEIGHT calculations only (excludes Safari address bar)
   const safeViewportHeight = window.visualViewport?.height || viewportHeight;
   const safeViewportWidth = window.visualViewport?.width || viewportWidth;
-  
-  // Detect device type for aggressive mobile optimization
-  const isMobile = safeViewportWidth < 480; // Small phones
   
   // DEBUG: Log to diagnose issue
   console.log('🔍 calculateGridSize DEBUG:', {
     levelId: level.id,
-    levelName: level.name,
-    safeViewportWidth,
+    windowInnerWidth: window.innerWidth,
+    visualViewportWidth: window.visualViewport?.width,
     isMobile,
-    'level.gridSize': level.gridSize,
-    'level.gridSize.max': level.gridSize.max,
-    wordCount: level.words.length
+    'level.gridSize.max': level.gridSize.max
   });
   
   // MOBILE: Use fixed grid size from getLevelById(), skip calculations
