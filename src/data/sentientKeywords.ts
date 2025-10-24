@@ -89,6 +89,16 @@ export const getLevelById = (id: number): Level | undefined => {
   const level = LEVELS.find(level => level.id === id);
   if (!level) return undefined;
   
+  // Detect mobile for word count adjustment
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 480;
+  
+  // Reduce word count on mobile (8x8 grid can fit fewer words comfortably)
+  let adjustedWordCount = level.wordCount || 10;
+  if (isMobile) {
+    // Reduce by ~20% for mobile
+    adjustedWordCount = Math.max(6, Math.floor(level.wordCount! * 0.8));
+  }
+  
   // Generate random words for this level
   const poolKey = `level${id}` as keyof typeof WORD_POOLS;
   const pool = WORD_POOLS[poolKey];
@@ -96,7 +106,8 @@ export const getLevelById = (id: number): Level | undefined => {
   if (pool && level.wordCount) {
     return {
       ...level,
-      words: selectRandomWords(pool, level.wordCount)
+      wordCount: adjustedWordCount,
+      words: selectRandomWords(pool, adjustedWordCount)
     };
   }
   

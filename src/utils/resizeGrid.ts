@@ -15,21 +15,34 @@ export function calculateGridSize(
   const safeViewportHeight = window.visualViewport?.height || viewportHeight;
   const safeViewportWidth = window.visualViewport?.width || viewportWidth;
   
-  // Mobile Safari UI bars take ~140px (top + bottom)
-  const headerHeight = 120; // Header + timer + buttons
-  const wordListHeight = Math.min(80, safeViewportHeight * 0.15); // Chips at bottom
-  const padding = 24; // Minimal padding
-  const safariBarsHeight = 100; // Account for Safari UI bars
+  // Detect device type for aggressive mobile optimization
+  const isMobile = safeViewportWidth < 480; // Small phones
+  const isTablet = safeViewportWidth >= 480 && safeViewportWidth < 768; // Tablets
+  
+  // AGGRESSIVE viewport calculations for mobile
+  const headerHeight = isMobile ? 140 : 120; // More space for mobile header
+  const wordListHeight = isMobile ? 100 : Math.min(80, safeViewportHeight * 0.15); // More space for chips
+  const padding = isMobile ? 32 : 24; // More padding for safety
+  const safariBarsHeight = isMobile ? 120 : 100; // More conservative Safari bars estimate
+  const safetyMargin = isMobile ? 40 : 0; // Extra safety margin for mobile
 
-  const availableHeight = safeViewportHeight - headerHeight - wordListHeight - padding - safariBarsHeight;
+  const availableHeight = safeViewportHeight - headerHeight - wordListHeight - padding - safariBarsHeight - safetyMargin;
   const availableWidth = safeViewportWidth - (padding * 2);
 
-  // Detect mobile for smaller cell sizes
-  const isMobile = safeViewportWidth < 768;
+  // AGGRESSIVE cell size reduction for mobile
+  let minCellSize: number;
+  let maxCellSize: number;
   
-  // Smaller cell sizes for mobile to fit more grid
-  const minCellSize = isMobile ? 32 : 36; // Smaller minimum for mobile
-  const maxCellSize = isMobile ? 38 : 42; // Smaller maximum for mobile
+  if (isMobile) {
+    minCellSize = 28; // Smaller for mobile (was 32)
+    maxCellSize = 34; // Smaller for mobile (was 38)
+  } else if (isTablet) {
+    minCellSize = 32;
+    maxCellSize = 38;
+  } else {
+    minCellSize = 36;
+    maxCellSize = 42;
+  }
 
   // Calculate optimal grid size based on level requirements
   const longestWord = Math.max(...level.words.map(w => w.length));
@@ -40,8 +53,19 @@ export function calculateGridSize(
   const maxGridByWidth = Math.floor(availableWidth / minCellSize);
   const maxGridSize = Math.min(maxGridByHeight, maxGridByWidth);
 
-  // Determine final grid size with mobile constraints
-  const gridSize = Math.max(minGridSize, Math.min(maxGridSize, level.gridSize.max));
+  // CRITICAL: Force maximum grid dimensions based on device
+  let maxGridDimension: number;
+  if (isMobile) {
+    maxGridDimension = 8; // Force 8x8 maximum on small phones
+  } else if (isTablet) {
+    maxGridDimension = 10; // Force 10x10 maximum on tablets
+  } else {
+    maxGridDimension = level.gridSize.max; // Use level's max on desktop
+  }
+
+  // Determine final grid size with AGGRESSIVE mobile constraints
+  const calculatedSize = Math.max(minGridSize, Math.min(maxGridSize, level.gridSize.max));
+  const gridSize = Math.min(calculatedSize, maxGridDimension);
   
   // Calculate actual cell size with mobile constraints
   const cellSizeByHeight = availableHeight / gridSize;
