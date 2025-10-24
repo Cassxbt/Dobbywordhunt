@@ -111,6 +111,14 @@ export const getLevelById = (id: number): Level | undefined => {
   // Mobile detection
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 480;
   
+  // DEBUG: Log mobile detection
+  console.log('📱 getLevelById DEBUG:', {
+    levelId: id,
+    windowInnerWidth: typeof window !== 'undefined' ? window.innerWidth : 'N/A',
+    isMobile,
+    'level.gridSize (original)': level.gridSize
+  });
+  
   const poolKey = `level${id}` as keyof typeof WORD_POOLS;
   let pool = WORD_POOLS[poolKey];
   
@@ -133,6 +141,12 @@ export const getLevelById = (id: number): Level | undefined => {
       // Levels 3-5: 10x10 (manageable challenge)
       adjustedGridSize = { min: 10, max: 10 };
     }
+    
+    console.log('✅ MOBILE ADJUSTMENTS:', {
+      adjustedGridSize,
+      adjustedWordCount,
+      poolSize: pool.length
+    });
   }
   
   // Select random words from (possibly filtered) pool

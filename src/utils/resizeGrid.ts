@@ -18,11 +18,24 @@ export function calculateGridSize(
   // Detect device type for aggressive mobile optimization
   const isMobile = safeViewportWidth < 480; // Small phones
   
+  // DEBUG: Log to diagnose issue
+  console.log('🔍 calculateGridSize DEBUG:', {
+    levelId: level.id,
+    levelName: level.name,
+    safeViewportWidth,
+    isMobile,
+    'level.gridSize': level.gridSize,
+    'level.gridSize.max': level.gridSize.max,
+    wordCount: level.words.length
+  });
+  
   // MOBILE: Use fixed grid size from getLevelById(), skip calculations
   if (isMobile) {
     const gridSize = level.gridSize.max; // This is 8 or 10 from getLevelById()
     const gridWidth = safeViewportWidth * 0.85; // 85vw (matches Tailwind)
     const cellSize = gridWidth / gridSize;
+    
+    console.log('✅ MOBILE EARLY RETURN:', { gridSize, cellSize });
     
     return {
       rows: gridSize,
