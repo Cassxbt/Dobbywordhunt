@@ -1,6 +1,5 @@
 import React from 'react';
 import { Cell } from '../types/game';
-import { getCellStyle } from '../utils/resizeGrid';
 
 interface CellProps {
   cell: Cell;
@@ -11,9 +10,9 @@ interface CellProps {
   onTouchStart: (event: React.TouchEvent) => void;
 }
 
-function CellComponent({ cell, isSelected, isHinted, cellSize, onMouseDown, onTouchStart }: CellProps) {
+function CellComponent({ cell, isSelected, isHinted, onMouseDown, onTouchStart }: CellProps) {
   const getCellClasses = () => {
-    let classes = 'border border-gray-200 font-semibold transition-all duration-200 ease-in-out';
+    let classes = 'aspect-square flex items-center justify-center border border-gray-200 font-semibold transition-all duration-200 ease-in-out cursor-pointer select-none rounded-md text-[clamp(0.8rem,2.5vw,1.2rem)] min-h-[32px] min-w-[32px]';
     
     if (cell.isFound) {
       classes += ' bg-primary-100 text-primary-800 border-primary-300';
@@ -22,7 +21,7 @@ function CellComponent({ cell, isSelected, isHinted, cellSize, onMouseDown, onTo
     } else if (isSelected) {
       classes += ' bg-primary-200 text-primary-900 border-primary-400';
     } else {
-      classes += ' bg-white text-gray-800 hover:bg-gray-50';
+      classes += ' bg-white text-gray-800 hover:bg-gray-50 active:scale-95';
     }
     
     return classes;
@@ -31,12 +30,16 @@ function CellComponent({ cell, isSelected, isHinted, cellSize, onMouseDown, onTo
   return (
     <div
       className={getCellClasses()}
-      style={getCellStyle(cellSize)}
       onMouseDown={onMouseDown}
       onTouchStart={onTouchStart}
       role="button"
       tabIndex={0}
       aria-label={`Cell ${cell.row},${cell.col}: ${cell.letter}`}
+      style={{
+        WebkitUserSelect: 'none',
+        WebkitTouchCallout: 'none',
+        touchAction: 'manipulation'
+      }}
     >
       {cell.letter}
     </div>

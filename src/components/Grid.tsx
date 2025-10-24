@@ -1,7 +1,6 @@
 import { Cell } from '../types/game';
 import { CellComponentMemo } from './Cell';
 import { useDragSelection } from '../hooks/useDragSelection';
-import { getResponsiveGridStyle } from '../utils/resizeGrid';
 
 interface GridProps {
   grid: Cell[][];
@@ -26,18 +25,18 @@ export function Grid({ grid, cellSize, hintHighlight, onSelectionComplete }: Gri
     return selectedCellsSet.has(`${row},${col}`);
   };
 
-  const gridStyle = getResponsiveGridStyle({
-    rows: grid.length,
-    cols: grid[0]?.length || 0,
-    cellSize
-  });
+  // Calculate grid columns for CSS Grid
+  const gridCols = grid[0]?.length || 0;
 
   return (
-    <div className="relative w-full h-full flex items-center justify-center p-2 sm:p-6 overflow-hidden" style={{ maxWidth: '100vw', position: 'relative' }}>
+    <div className="relative w-full h-full flex items-center justify-center p-2 sm:p-4 overflow-hidden">
       <div
         ref={containerRef}
-        className="relative"
-        style={gridStyle}
+        className="grid gap-[2px] w-[85vw] max-w-[500px] aspect-square mx-auto relative"
+        style={{
+          gridTemplateColumns: `repeat(${gridCols}, 1fr)`,
+          touchAction: 'none'
+        }}
         onMouseDown={handleStart}
         onMouseMove={handleMove}
         onMouseUp={handleEnd}
@@ -62,18 +61,21 @@ export function Grid({ grid, cellSize, hintHighlight, onSelectionComplete }: Gri
         {/* Selection line overlay */}
         {selection.isSelecting && selection.startCell && selection.currentCell && (
           <svg
-            className="absolute inset-0 pointer-events-none"
+            className="absolute inset-0 pointer-events-none w-full h-full"
             style={{ zIndex: 10 }}
+            viewBox={`0 0 ${gridCols} ${gridCols}`}
+            preserveAspectRatio="none"
           >
             <line
-              x1={selection.startCell.col * cellSize + cellSize / 2}
-              y1={selection.startCell.row * cellSize + cellSize / 2}
-              x2={selection.currentCell.col * cellSize + cellSize / 2}
-              y2={selection.currentCell.row * cellSize + cellSize / 2}
+              x1={selection.startCell.col + 0.5}
+              y1={selection.startCell.row + 0.5}
+              x2={selection.currentCell.col + 0.5}
+              y2={selection.currentCell.row + 0.5}
               stroke="#8B5CF6"
-              strokeWidth="3"
-              strokeDasharray="5,5"
+              strokeWidth="0.15"
+              strokeDasharray="0.2,0.2"
               opacity="0.8"
+              vectorEffect="non-scaling-stroke"
             />
           </svg>
         )}
