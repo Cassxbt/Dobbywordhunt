@@ -33,7 +33,7 @@ export function FoundWordsChips({ foundWords, totalWords, onWordClick, onQuit }:
           <button
             onClick={onQuit}
             onTouchEnd={(e) => { e.preventDefault(); onQuit(); }}
-            className="w-11 h-11 bg-gray-100 hover:bg-gray-200 active:bg-gray-300 text-gray-700 rounded-full shadow-sm hover:shadow-md transition-all duration-200 flex items-center justify-center touch-target"
+            className="w-11 h-11 bg-primary-100 hover:bg-primary-200 active:bg-primary-300 text-primary-800 rounded-full shadow-sm hover:shadow-md transition-all duration-200 flex items-center justify-center touch-target"
             style={{ 
               WebkitTapHighlightColor: 'rgba(0,0,0,0.1)', 
               touchAction: 'manipulation'

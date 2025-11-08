@@ -19,12 +19,12 @@ export function generateTweetText(data: ShareData): string {
 
   const timeTaken = formatTime(level.timeLimit - timeLeft);
 
-  const tweetText = `🎮 Just crushed Level ${level.id}: ${level.name} in ${timeTaken}! ⚡
+  const tweetText = `🎮 Just crushed Level ${level.id}: ${level.name} in ${timeTaken}!
 
-Think you're truly Sentient? Prove it! 🧠✨
+Think you're truly Sentient? Prove it!
 
-Play #DobbyWordHunt🐾 👇
-[GAME_LINK_HERE]
+Play #DobbyWordHunt
+https://dobbywordhunt.vercel.app
 
 @SentientAGI #SentientAGI`;
 
