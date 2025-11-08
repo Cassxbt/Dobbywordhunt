@@ -180,6 +180,7 @@ export function Game() {
           foundWords={gameState.words.filter(word => word.isFound)}
           totalWords={level.words.length}
           onWordClick={handleWordClick}
+          onQuit={() => setShowQuitConfirmation(true)}
         />
       </div>
 
@@ -385,19 +386,6 @@ export function Game() {
           </div>
         )}
       </Modal>
-
-      {/* Quit FAB Button */}
-      <button
-        onClick={() => setShowQuitConfirmation(true)}
-        onTouchEnd={(e) => { e.preventDefault(); setShowQuitConfirmation(true); }}
-        className="fixed bottom-4 right-4 w-14 h-14 bg-primary-600 hover:bg-primary-700 active:bg-primary-800 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center z-40 touch-target"
-        style={{ WebkitTapHighlightColor: 'rgba(0,0,0,0.1)', touchAction: 'manipulation' }}
-        aria-label="Quit game"
-      >
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </button>
 
       {/* Quit Confirmation Modal */}
       <Modal

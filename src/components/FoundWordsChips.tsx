@@ -4,9 +4,10 @@ interface FoundWordsChipsProps {
   foundWords: Word[];
   totalWords: number;
   onWordClick: (word: Word) => void;
+  onQuit?: () => void;
 }
 
-export function FoundWordsChips({ foundWords, totalWords, onWordClick }: FoundWordsChipsProps) {
+export function FoundWordsChips({ foundWords, totalWords, onWordClick, onQuit }: FoundWordsChipsProps) {
   if (foundWords.length === 0) {
     return (
       <div className="bg-white border-b border-gray-200 p-4">
@@ -28,9 +29,22 @@ export function FoundWordsChips({ foundWords, totalWords, onWordClick }: FoundWo
           <span>Found: {foundWords.length} / {totalWords}</span>
         </div>
         
-        <div className="text-xs text-gray-500">
-          {Math.round((foundWords.length / totalWords) * 100)}% complete
-        </div>
+        {onQuit && (
+          <button
+            onClick={onQuit}
+            onTouchEnd={(e) => { e.preventDefault(); onQuit(); }}
+            className="w-11 h-11 bg-gray-100 hover:bg-gray-200 active:bg-gray-300 text-gray-700 rounded-full shadow-sm hover:shadow-md transition-all duration-200 flex items-center justify-center touch-target"
+            style={{ 
+              WebkitTapHighlightColor: 'rgba(0,0,0,0.1)', 
+              touchAction: 'manipulation'
+            }}
+            aria-label="Quit game"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        )}
       </div>
       
       <div className="flex gap-2 overflow-x-auto pb-1">
